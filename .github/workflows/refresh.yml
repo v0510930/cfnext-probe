@@ -1,9 +1,7 @@
 name: cfnext-probe
 
 on:
-  schedule:
-    # 每 6 小时跑一次，与 Worker 的 Cron 错开 15 分钟
-    - cron: '15 */6 * * *'
+  # 国内 FunctionGraph 负责定时探活；此工作流保留为手动境外兜底，避免覆盖国内实测结果
   workflow_dispatch:
 
 concurrency:
