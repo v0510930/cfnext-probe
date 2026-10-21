@@ -1,0 +1,28 @@
+name: cfnext-probe
+
+on:
+  schedule:
+    # 每 6 小时跑一次，与 Worker 的 Cron 错开 15 分钟
+    - cron: '15 */6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: cfnext-probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Probe Cloudflare IPs
+        env:
+          INGEST_URL: ${{ secrets.INGEST_URL }}
+          RUN_KEY: ${{ secrets.RUN_KEY }}
+        run: node scripts/probe.mjs
